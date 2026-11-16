@@ -61,7 +61,7 @@ public class Main {
 
     private void showMenu() {
         System.out.println("================================");
-        System.out.println("          QA TRACKER v1.0");
+        System.out.println("          QA TRACKER ");
         System.out.println("================================");
         System.out.println("1. Add a test case");
         System.out.println("2. View all test cases");
