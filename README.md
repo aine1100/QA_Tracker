@@ -11,7 +11,7 @@ javac -d out src/Main.java src/enums/*.java src/models/*.java src/validations/*.
 java -cp out Main
 ```
 
-The menu lets you add a test case, view all cases, update a status, search by title or description, generate a report, save, and exit. Required test case details cannot be left blank. Separate multiple preconditions or expected results with commas. The view wraps long cell text onto additional display lines for readability. Type and status selections use numbered menus. The application loads saved data at startup and saves changes after adding or updating a case, as well as on explicit save and exit.
+The six menu options match the assignment: add a case, view all cases, update status, search, generate a report, and save and exit. Title and expected result are required. Description and preconditions are optional. The tester name is required for manual cases, and the script path is required for automated cases. Leave the search keyword empty to show all cases. Searches ignore capitalization. The view wraps long cell text onto additional display lines for readability. Type and status selections use numbered menus. The application loads saved data at startup and saves changes after adding or updating a case, and when you save and exit.
 
 ## Project structure
 

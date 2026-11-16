@@ -29,7 +29,7 @@ public class Main {
         boolean running = true;
         while (running) {
             showMenu();
-            int choice = validator.readMenuChoice(1, 7);
+            int choice = validator.readMenuChoice(1, 6);
             switch (choice) {
                 case 1:
                     addTestCase();
@@ -48,9 +48,6 @@ public class Main {
                     break;
                 case 6:
                     saveAndNotify();
-                    break;
-                case 7:
-                    saveAndNotify();
                     running = false;
                     System.out.println("Goodbye.");
                     break;
@@ -64,34 +61,33 @@ public class Main {
 
     private void showMenu() {
         System.out.println("================================");
-        System.out.println("           QA TRACKER");
+        System.out.println("          QA TRACKER v1.0");
         System.out.println("================================");
         System.out.println("1. Add a test case");
         System.out.println("2. View all test cases");
         System.out.println("3. Update test status");
         System.out.println("4. Search test cases");
         System.out.println("5. Generate execution report");
-        System.out.println("6. Save data");
-        System.out.println("7. Save and exit");
+        System.out.println("6. Save & Exit");
     }
 
     private void addTestCase() {
         TestType type = validator.readTestType();
-        String title = validator.readRequired("Title: ");
-        String description = validator.readRequired("Description: ");
-        String preconditions = validator.readRequired(
-                "Preconditions (separate multiple items with commas): ");
+        String title = validator.readRequired("Title (required): ");
+        String description = validator.readOptional("Description (optional): ");
+        String preconditions = validator.readOptional(
+                "Preconditions (optional; separate multiple items with commas): ");
         String expectedResult = validator.readRequired(
-                "Expected result (separate multiple items with commas): ");
+                "Expected result (required; separate multiple items with commas): ");
 
         int id = testCaseService.generateId();
         TestCaseModel testCase;
         if (type == TestType.MANUAL) {
-            String testerName = validator.readRequired("Tester name: ");
+            String testerName = validator.readRequired("Tester name (required for manual tests): ");
             testCase = new ManualTestCaseModel(id, title, description, preconditions,
                     expectedResult, testerName);
         } else {
-            String scriptPath = validator.readRequired("Automation script path: ");
+            String scriptPath = validator.readRequired("Automation script path (required for automated tests): ");
             testCase = new AutomatedTestCaseModel(id, title, description, preconditions,
                     expectedResult, scriptPath);
         }
@@ -102,17 +98,21 @@ public class Main {
 
     private void updateStatus() {
         int id = validator.readPositiveId();
-        TestStatus status = validator.readTestStatus();
-        if (testCaseService.updateStatus(id, status)) {
-            System.out.println("Updated test case " + id + " to " + status + ".");
-            saveAndNotify();
-        } else {
+        TestCaseModel testCase = testCaseService.findById(id);
+        if (testCase == null) {
             System.out.println("No test case exists with ID " + id + ".");
+            return;
         }
+        System.out.println("Current status: " + testCase.getStatus());
+        TestStatus status = validator.readTestStatus();
+        testCaseService.updateStatus(id, status);
+        System.out.println("Updated test case " + id + " to " + status + ".");
+        saveAndNotify();
     }
 
     private void searchTestCases() {
-        String keyword = validator.readRequired("Search title or description: ");
+        System.out.print("Search title or description (leave empty to show all): ");
+        String keyword = scanner.nextLine();
         List<TestCaseModel> matches = testCaseService.searchByKeyword(keyword);
         testCaseService.displayTestCases(matches);
     }

@@ -5,6 +5,7 @@ import models.TestCaseModel;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Locale;
 
 public class TestCaseService {
 
@@ -77,7 +78,7 @@ public class TestCaseService {
         if (keyword == null || keyword.trim().isEmpty()) {
             return getAllTestCases();
         }
-        String key = keyword.trim().toLowerCase();
+        String key = keyword.trim().toLowerCase(Locale.ROOT);
         List<TestCaseModel> results = new ArrayList<>();
         for (TestCaseModel tc : testCases) {
             String title = safeLower(tc.getTitle());
@@ -90,7 +91,7 @@ public class TestCaseService {
     }
 
     private String safeLower(String text) {
-        return text == null ? "" : text.toLowerCase();
+        return text == null ? "" : text.toLowerCase(Locale.ROOT);
     }
 
     // ---------- Display ----------
