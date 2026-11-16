@@ -20,6 +20,7 @@ public class Main {
     private final ReportGeneratorService reportGenerator = new ReportGeneratorService();
     private final FileStorage fileStorage = new FileStorage();
 
+
     public static void main(String[] args) {
         new Main().run();
     }

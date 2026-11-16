@@ -39,7 +39,6 @@ public class InputValidator {
                 int choice = Integer.parseInt(value);
                 if (choice >= minimum && choice <= maximum) return choice;
             } catch (NumberFormatException ignored) {
-                // Show one consistent message for non-numeric and out-of-range input.
             }
             System.out.printf("Enter a number from %d to %d.%n", minimum, maximum);
         }
@@ -53,7 +52,6 @@ public class InputValidator {
                 int id = Integer.parseInt(value);
                 if (id > 0) return id;
             } catch (NumberFormatException ignored) {
-                // Retry below.
             }
             System.out.println("Enter a valid positive ID.");
         }
@@ -69,7 +67,6 @@ public class InputValidator {
                 if (choice == 1) return TestType.MANUAL;
                 if (choice == 2) return TestType.AUTOMATED;
             } catch (NumberFormatException ignored) {
-                // Retry with the numbered choices.
             }
             System.out.println("Enter 1 for Manual or 2 for Automated.");
         }
