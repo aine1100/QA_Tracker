@@ -43,6 +43,7 @@ public abstract class TestCaseModel {
         return expectedResult;
     }
 
+
     public TestStatus getStatus() {
         return status;
     }
@@ -67,6 +68,7 @@ public abstract class TestCaseModel {
     public void setExpectedResult(String expectedResult) {
         this.expectedResult = expectedResult;
     }
+
 
     public void setStatus(TestStatus status) {
         this.status = status;

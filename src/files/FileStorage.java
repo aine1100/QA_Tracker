@@ -21,7 +21,9 @@ import java.util.List;
 
 public class FileStorage {
 
-    private static final String HEADER = "TEST CASE ID\tTEST TYPE\tTEST STATUS\tTITLE\tDESCRIPTION\tPRECONDITIONS\tEXPECTED RESULT\tTESTER NAME (MANUAL) / SCRIPT PATH (AUTOMATED)";
+    private static final String HEADER = "ID\tTYPE\tSTATUS\tTITLE\tDESCRIPTION\tPRECONDITIONS\tEXPECTED RESULT\tTESTER / SCRIPT PATH";
+    private static final String STEPS_TABLE_HEADER = "ID\tTYPE\tSTATUS\tTITLE\tDESCRIPTION\tPRECONDITIONS\tTEST STEPS\tEXPECTED RESULT\tTESTER / SCRIPT PATH";
+    private static final String OLD_TABLE_HEADER = "TEST CASE ID\tTEST TYPE\tTEST STATUS\tTITLE\tDESCRIPTION\tPRECONDITIONS\tEXPECTED RESULT\tTESTER NAME (MANUAL) / SCRIPT PATH (AUTOMATED)";
     private static final String LEGACY_HEADER = "QA_TRACKER\t1";
     private static final Base64.Decoder DECODER = Base64.getUrlDecoder();
 
@@ -58,14 +60,15 @@ public class FileStorage {
         List<TestCaseModel> testCases = new ArrayList<>();
         try (BufferedReader reader = Files.newBufferedReader(filePath, StandardCharsets.UTF_8)) {
             String header = reader.readLine();
-            if (HEADER.equals(header)) {
+            if (HEADER.equals(header) || OLD_TABLE_HEADER.equals(header) || STEPS_TABLE_HEADER.equals(header)) {
+                boolean hasSteps = STEPS_TABLE_HEADER.equals(header);
                 String line;
                 int lineNumber = 1;
                 while ((line = reader.readLine()) != null) {
                     lineNumber++;
                     if (line.isEmpty()) continue;
                     try {
-                        testCases.add(parseTableRow(line));
+                        testCases.add(parseTableRow(line, hasSteps));
                     } catch (IllegalArgumentException exception) {
                         throw new IOException("Invalid test case record at line " + lineNumber
                                 + " in " + filePath, exception);
@@ -137,10 +140,10 @@ public class FileStorage {
         }
     }
 
-    private TestCaseModel parseTableRow(String line) {
+    private TestCaseModel parseTableRow(String line, boolean hasSteps) {
         String[] fields = line.split("\t", -1);
-        if (fields.length != 8) {
-            throw new IllegalArgumentException("Expected 8 tab-separated fields.");
+        if (fields.length != (hasSteps ? 9 : 8)) {
+            throw new IllegalArgumentException("Unexpected number of tab-separated fields.");
         }
 
         int id = Integer.parseInt(fields[0]);
@@ -149,8 +152,8 @@ public class FileStorage {
         String title = fields[3];
         String description = fields[4];
         String preconditions = fields[5];
-        String expectedResult = fields[6];
-        String typeDetail = fields[7];
+        String expectedResult = fields[hasSteps ? 7 : 6];
+        String typeDetail = fields[hasSteps ? 8 : 7];
 
         TestCaseModel testCase;
         if (type == TestType.MANUAL) {
@@ -166,15 +169,16 @@ public class FileStorage {
 
     private TestCaseModel parseLegacyTestCase(String line) {
         String[] fields = line.split("\\t", -1);
-        if (fields.length != 8) throw new IllegalArgumentException("Expected 8 fields.");
+        if (fields.length != 8 && fields.length != 9) throw new IllegalArgumentException("Unexpected number of fields.");
         int id = Integer.parseInt(fields[0]);
         TestType type = TestType.valueOf(fields[1]);
         TestStatus status = TestStatus.valueOf(fields[2]);
         String title = decodeLegacy(fields[3]);
         String description = decodeLegacy(fields[4]);
         String preconditions = decodeLegacy(fields[5]);
-        String expectedResult = decodeLegacy(fields[6]);
-        String detail = decodeLegacy(fields[7]);
+        boolean hasSteps = fields.length == 9;
+        String expectedResult = decodeLegacy(fields[hasSteps ? 7 : 6]);
+        String detail = decodeLegacy(fields[hasSteps ? 8 : 7]);
         TestCaseModel testCase = type == TestType.MANUAL
                 ? new ManualTestCaseModel(id, title, description, preconditions, expectedResult, detail)
                 : new AutomatedTestCaseModel(id, title, description, preconditions, expectedResult, detail);

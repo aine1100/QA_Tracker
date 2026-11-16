@@ -105,28 +105,46 @@ public class TestCaseService {
             return;
         }
 
-        String format = "%-5s %-28s %-10s %-10s %-30s%n";
-        String line = "-".repeat(87);
-
-        System.out.println(line);
-        System.out.printf(format, "ID", "Title", "Type", "Status", "Tester / Script Path");
-        System.out.println(line);
-
+        String border = "+------+------------+------------+----------+--------------------+--------------------+--------------------+--------------------+";
+        System.out.println(border);
+        System.out.printf("| %-4s | %-10s | %-10s | %-8s | %-18s | %-18s | %-18s | %-18s |%n",
+                "ID", "Type", "Status", "Title", "Description", "Preconditions", "Expected result", "Tester / Script");
+        System.out.println(border);
         for (TestCaseModel tc : list) {
-            System.out.printf(format,
-                    tc.getId(),
-                    truncate(tc.getTitle(), 28),
-                    tc.getType(),
-                    tc.getStatus(),
-                    truncate(tc.getTypeDetail(), 30));
+            String[] values = {String.valueOf(tc.getId()), tc.getType().toString(), tc.getStatus().toString(),
+                    tc.getTitle(), tc.getDescription(), tc.getPreconditions(),
+                    tc.getExpectedResult(), tc.getTypeDetail()};
+            String[][] wrapped = new String[values.length][];
+            int maxLines = 1;
+            for (int i = 0; i < values.length; i++) {
+                wrapped[i] = wrap(values[i], i == 0 ? 4 : i == 1 || i == 2 ? 10 : 18);
+                maxLines = Math.max(maxLines, wrapped[i].length);
+            }
+            for (int row = 0; row < maxLines; row++) {
+                System.out.printf("| %-4s | %-10s | %-10s | %-8s | %-18s | %-18s | %-18s | %-18s |%n",
+                        cell(wrapped[0], row), cell(wrapped[1], row), cell(wrapped[2], row),
+                        cell(wrapped[3], row), cell(wrapped[4], row), cell(wrapped[5], row),
+                        cell(wrapped[6], row), cell(wrapped[7], row));
+            }
+            System.out.println(border);
         }
-        System.out.println(line);
     }
 
-    private String truncate(String text, int max) {
-        if (text == null) {
-            return "";
+    private String[] wrap(String text, int width) {
+        String value = text == null ? "" : text.replace('\t', ' ').replace('\r', ' ').replace('\n', ' ').trim();
+        if (value.isEmpty()) return new String[]{""};
+        List<String> lines = new ArrayList<>();
+        while (value.length() > width) {
+            int split = value.lastIndexOf(' ', width);
+            if (split <= 0) split = width;
+            lines.add(value.substring(0, split));
+            value = value.substring(split).trim();
         }
-        return text.length() <= max ? text : text.substring(0, max - 3) + "...";
+        lines.add(value);
+        return lines.toArray(new String[0]);
+    }
+
+    private String cell(String[] lines, int row) {
+        return row < lines.length ? lines[row] : "";
     }
 }

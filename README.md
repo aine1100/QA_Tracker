@@ -1,6 +1,6 @@
 # QA Tracker
 
-QA Tracker is a console application for recording manual and automated test cases, tracking their execution status, searching cases, and producing a summary report. It saves records as a tab-separated table in the project's `data/test-cases.txt`. The columns name the test case ID, type, status, title, description, preconditions, expected result, and tester name (manual) or script path (automated). The file is created the first time you choose Save, add a case, update a status, or exit; it is not created just by starting the app. After saving, the application prints the full path so the file is easy to locate.
+QA Tracker is a console application for recording manual and automated test cases, tracking their execution status, searching cases, and producing a summary report. It saves records as a tab-separated table in the project's `data/test-cases.txt`. The columns include ID, type, status, title, description, preconditions, expected result, and tester name (manual) or script path (automated). Keep each record on one line and separate multiple items inside a cell with commas. The file is created the first time you choose Save, add a case, update a status, or exit; it is not created just by starting the app. After saving, the application prints the full path so the file is easy to locate.
 
 ## Run the application
 
@@ -11,7 +11,7 @@ javac -d out src/Main.java src/enums/*.java src/models/*.java src/validations/*.
 java -cp out Main
 ```
 
-The menu lets you add a test case, view all cases, update a status, search by title or description, generate a report, save, and exit. Required test case details cannot be left blank. Separate multiple preconditions or expected results with commas, for example `Access to the home page, Existing account` or `Welcome message appears, Dashboard is displayed`. Type and status selections use numbered menus. The application loads saved data at startup and saves changes after adding or updating a case, as well as on explicit save and exit.
+The menu lets you add a test case, view all cases, update a status, search by title or description, generate a report, save, and exit. Required test case details cannot be left blank. Separate multiple preconditions or expected results with commas. The view wraps long cell text onto additional display lines for readability. Type and status selections use numbered menus. The application loads saved data at startup and saves changes after adding or updating a case, as well as on explicit save and exit.
 
 ## Project structure
 
