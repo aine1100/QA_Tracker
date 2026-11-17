@@ -11,7 +11,6 @@ import validations.InputValidator;
 import java.io.IOException;
 import java.util.List;
 import java.util.Scanner;
-
 /** Console entry point for QA Tracker. */
 public class Main {
     private final Scanner scanner = new Scanner(System.in);
@@ -52,7 +51,7 @@ public class Main {
                     System.out.println("Goodbye.");
                     break;
                 default:
-                    throw new IllegalStateException("Unexpected menu choice.");
+                    throw new IllegalStateException("Invalid menu choice.");
             }
             if (running) System.out.println();
         }

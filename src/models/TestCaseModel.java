@@ -22,7 +22,6 @@ public abstract class TestCaseModel {
         this.status = TestStatus.NOT_RUN;
     }
 
-    // Getters
     public int getId() {
         return id;
     }
@@ -48,7 +47,7 @@ public abstract class TestCaseModel {
         return status;
     }
 
-    // Setters
+
 
     public void setTitle(String title) {
         this.title = title;

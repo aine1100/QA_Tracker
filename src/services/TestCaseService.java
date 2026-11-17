@@ -12,7 +12,6 @@ public class TestCaseService {
     private final List<TestCaseModel> testCases = new ArrayList<>();
     private int nextId = 1;
 
-    // ---------- ID generation ----------
 
     public int generateId() {
         return nextId++;
@@ -61,7 +60,6 @@ public class TestCaseService {
         return null;
     }
 
-    // ---------- Update ----------
 
     public boolean updateStatus(int id, TestStatus newStatus) {
         TestCaseModel tc = findById(id);
@@ -72,7 +70,6 @@ public class TestCaseService {
         return true;
     }
 
-    // ---------- Search ----------
 
     public List<TestCaseModel> searchByKeyword(String keyword) {
         if (keyword == null || keyword.trim().isEmpty()) {
@@ -94,7 +91,7 @@ public class TestCaseService {
         return text == null ? "" : text.toLowerCase(Locale.ROOT);
     }
 
-    // ---------- Display ----------
+
 
     public void viewAllTestCases() {
         displayTestCases(testCases);

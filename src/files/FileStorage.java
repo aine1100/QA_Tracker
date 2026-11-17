@@ -48,9 +48,6 @@ public class FileStorage {
         this.filePath = filePath;
     }
 
-    // -------------------------------------------------------------------------
-    // Public API
-    // -------------------------------------------------------------------------
 
     public List<TestCaseModel> loadTestCases() throws IOException {
         if (Files.notExists(filePath)) {
@@ -126,9 +123,7 @@ public class FileStorage {
         return filePath.toAbsolutePath();
     }
 
-    // -------------------------------------------------------------------------
-    // CSV write helpers
-    // -------------------------------------------------------------------------
+
 
     private void writeCsvRow(BufferedWriter writer, TestCaseModel testCase) throws IOException {
         writer.write(csvField(String.valueOf(testCase.getId())));
@@ -149,12 +144,7 @@ public class FileStorage {
         writer.newLine();
     }
 
-    /**
-     * Encodes a single field following RFC 4180:
-     * - Null becomes an empty field.
-     * - If the value contains a comma, double-quote, CR, or LF it is wrapped in
-     *   double-quotes and any internal double-quote is escaped as "".
-     */
+
     private String csvField(String value) {
         if (value == null) {
             return "";
@@ -166,9 +156,6 @@ public class FileStorage {
         return value;
     }
 
-    // -------------------------------------------------------------------------
-    // CSV parse helpers
-    // -------------------------------------------------------------------------
 
     private TestCaseModel parseCsvRow(String line) {
         List<String> fields = splitCsvLine(line);
@@ -198,11 +185,7 @@ public class FileStorage {
         return testCase;
     }
 
-    /**
-     * Minimal RFC 4180 CSV line splitter.
-     * Handles double-quote-enclosed fields (including embedded commas and escaped
-     * quotes written as "") but does not support multi-line fields.
-     */
+
     private List<String> splitCsvLine(String line) {
         List<String> fields = new ArrayList<>();
         StringBuilder current = new StringBuilder();
@@ -235,7 +218,7 @@ public class FileStorage {
                 }
             }
         }
-        fields.add(current.toString()); // last field (no trailing comma required)
+        fields.add(current.toString());
         return fields;
     }
 }
