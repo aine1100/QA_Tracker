@@ -2,7 +2,6 @@ package validations;
 
 import enums.TestStatus;
 import enums.TestType;
-
 import java.util.Scanner;
 
 /** Reads and validates console input used by the application. */
